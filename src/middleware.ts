@@ -6,7 +6,7 @@ function errorThrow (message: any): any{
     throw message
 }
 
-export function checkLengthCreatePurchaseBody (req: Request, resp: Response, next: NextFunction): NextFunction | any{
+export function checkLengthCreatePurchaseBody (req: Request, resp: Response, next: NextFunction): Response | void{
     try {
         Object.keys(req.body).length === 2 ? next() : errorThrow("Informações incorretas do objeto.")
     }
@@ -15,7 +15,7 @@ export function checkLengthCreatePurchaseBody (req: Request, resp: Response, nex
     }
 }
 
-export function checkContentCreatePurchaseBody (req: Request, resp: Response, next: NextFunction): NextFunction | any{
+export function checkContentCreatePurchaseBody (req: Request, resp: Response, next: NextFunction): Response | void{
     try {
         !req.body.listName ? errorThrow("Não possui a propridade listName") : typeof req.body.listName !== "string" && errorThrow("A propriedade listName não é uma string")
         !req.body.data ? errorThrow("Não possui a propriedade data") : !Array.isArray(req.body.data) && errorThrow("A propriedade data não é um array")
@@ -26,7 +26,7 @@ export function checkContentCreatePurchaseBody (req: Request, resp: Response, ne
     }
 }
 
-export function findPurchaseList (req: Request, resp: Response, next: NextFunction): NextFunction | any{
+export function findPurchaseList (req: Request, resp: Response, next: NextFunction): Response | void{
     try {
         const objectPurchaseList: IPurchaseItemExtended | undefined = purchaseList.find(list => 
             (list.id === Number(req.params.id)) && list
@@ -39,7 +39,7 @@ export function findPurchaseList (req: Request, resp: Response, next: NextFuncti
     }
 }
 
-export function checkLengthCreateItemBody (req: Request, resp: Response, next: NextFunction): NextFunction | any{
+export function checkLengthCreateItemBody (req: Request, resp: Response, next: NextFunction): Response | void{
     try {
         Object.keys(req.body).length === 2 ? next() : errorThrow("Informações do item estão incorretas.")
     }
@@ -48,7 +48,7 @@ export function checkLengthCreateItemBody (req: Request, resp: Response, next: N
     }
 }
 
-export function checkContentCreateItemBody (req: Request, resp: Response, next: NextFunction): NextFunction | any{
+export function checkContentCreateItemBody (req: Request, resp: Response, next: NextFunction): Response | void{
     try {
         !req.body.name ? errorThrow("O nome do item é obrigatório.") : typeof req.body.name !== "string" && errorThrow("O nome precisa ser uma string")
         !req.body.quantity ? errorThrow("A quantidade do item é obrigatório.") : typeof req.body.quantity !== "string" && errorThrow("A quantidade precisa ser uma string")
@@ -59,7 +59,7 @@ export function checkContentCreateItemBody (req: Request, resp: Response, next: 
     }
 }
 
-export function checkDuplicatedPurchaseListData (req: Request, resp: Response, next: NextFunction): NextFunction | any{
+export function checkDuplicatedPurchaseListData (req: Request, resp: Response, next: NextFunction): Response | void{
     try {
         const checkDuplicated = req.purchaseList.data.findIndex((item: IItemList) => 
             item.name.toUpperCase() === req.body.name.toUpperCase() && item
@@ -72,7 +72,7 @@ export function checkDuplicatedPurchaseListData (req: Request, resp: Response, n
     }
 }
 
-export function findItemPosition (req: Request, resp: Response, next: NextFunction): NextFunction | any{
+export function findItemPosition (req: Request, resp: Response, next: NextFunction): Response | void{
     try {
         const findIndexItem = req.purchaseList.data.findIndex(item => 
             item.name === req.params.itemName && item    
@@ -85,7 +85,7 @@ export function findItemPosition (req: Request, resp: Response, next: NextFuncti
     }
 }
 
-export function checkContentUpdateItemBody (req: Request, resp: Response, next: NextFunction): NextFunction | any{
+export function checkContentUpdateItemBody (req: Request, resp: Response, next: NextFunction): Response | void{
     try {
         const arrayKeys = Object.keys(req.body)
         arrayKeys.some(key => (key !== "quantity" && key !== "name") && key) && errorThrow("Propriedade(s) do objeto incorretos.")
