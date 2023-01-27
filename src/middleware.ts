@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express"
 import { purchaseList } from "./database"
 import { IItemList, IPurchaseItemExtended } from "./interface"
 
-function errorThrow (message: any): () => void{
+function errorThrow (message: any): any{
     throw message
 }
 
@@ -79,6 +79,19 @@ export function findItemPosition (req: Request, resp: Response, next: NextFuncti
         )
         findIndexItem === -1 ? errorThrow("Item não encontrado.") : req.itemIndex = findIndexItem
         next ()
+    }
+    catch (err){
+        return resp.status(400).json(err)
+    }
+}
+
+export function checkContentUpdateItemBody (req: Request, resp: Response, next: NextFunction): NextFunction | any{
+    try {
+        const arrayKeys = Object.keys(req.body)
+        arrayKeys.some(key => (key !== "quantity" && key !== "name") && key) && errorThrow("Propriedade(s) do objeto incorretos.")
+        req.body.name && typeof req.body.name !== "string" && errorThrow("Nome do item precisa ser uma string")
+        req.body.quantity && typeof req.body.quantity !== "string" && errorThrow("Quantidade do item precisa ser uma string")
+        next()
     }
     catch (err){
         return resp.status(400).json(err)
